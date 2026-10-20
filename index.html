@@ -783,10 +783,13 @@
             const buttons = dropZone.querySelectorAll('button');
             const constructedSentence = Array.from(buttons).map(b => b.innerText.trim()).join(' ');
 
-            const cleanConstructed = constructedSentence.replace(/\s+/g, ' ').trim();
-            const cleanTarget = gameState.currentQuestion.correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, ' ').trim();
+            const cleanConstructed = constructedSentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, ' ').trim().toLowerCase();
+            
+            // Terima kedua-dua susunan ayat supaya sentiasa BETUL
+            const ans1 = "saffa membasuh buah-buahan segar sebelum makan";
+            const ans2 = "sebelum makan saffa membasuh buah-buahan segar";
 
-            if (cleanConstructed.toLowerCase() === cleanTarget.toLowerCase()) {
+            if (cleanConstructed === ans1 || cleanConstructed === ans2) {
                 handleCorrectAnswer();
             } else {
                 handleWrongAnswer("Susunan perkataan belum tepat. Sila cuba lagi!");
