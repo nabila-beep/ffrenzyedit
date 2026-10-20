@@ -778,18 +778,31 @@
             `).join('');
         }
 
-        function checkReorderAnswer() {
+       function checkReorderAnswer() {
             const dropZone = document.getElementById('dropZone');
             const buttons = dropZone.querySelectorAll('button');
             const constructedSentence = Array.from(buttons).map(b => b.innerText.trim()).join(' ');
 
             const cleanConstructed = constructedSentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, ' ').trim().toLowerCase();
-            
-            // Terima kedua-dua susunan ayat supaya sentiasa BETUL
-            const ans1 = "saffa membasuh buah-buahan segar sebelum makan";
-            const ans2 = "sebelum makan saffa membasuh buah-buahan segar";
+            const q = gameState.currentQuestion;
 
-            if (cleanConstructed === ans1 || cleanConstructed === ans2) {
+            // Jika soalan ini ada skema rasmi (seperti Soalan 1: Ali...)
+            if (q && q.correctAnswer) {
+                const target = q.correctAnswer.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, ' ').trim().toLowerCase();
+                if (cleanConstructed === target) {
+                    handleCorrectAnswer();
+                    return;
+                }
+            }
+
+            // Variasi jawapan tambahan yang sentiasa DITERIMA SEBAGAI BETUL:
+            const jawapanLain = [
+                "ali telah keracunan makanan kerana makan makanan basi",
+                "saffa membasuh buah-buahan segar sebelum makan",
+                "sebelum makan saffa membasuh buah-buahan segar"
+            ];
+
+            if (jawapanLain.includes(cleanConstructed)) {
                 handleCorrectAnswer();
             } else {
                 handleWrongAnswer("Susunan perkataan belum tepat. Sila cuba lagi!");
