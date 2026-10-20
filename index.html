@@ -6,7 +6,7 @@
     <title>FEEDING FRENZY: MISI EJAAN SIHAT</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font Lexend for accessibility and high legibility -->
+    <!-- Google Font Lexend -->
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -36,7 +36,6 @@
             backdrop-filter: blur(12px);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
-        /* Custom animations */
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
             50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.9); }
@@ -48,13 +47,13 @@
 </head>
 <body class="relative w-screen h-screen overflow-hidden text-white flex flex-col justify-between">
 
-    <!-- Canvas Interactive Background & Game World -->
+    <!-- Canvas Interactive Background -->
     <canvas id="gameCanvas" class="absolute inset-0 w-full h-full z-0"></canvas>
 
     <!-- Overlay Screen Container -->
     <div id="uiOverlay" class="relative z-10 w-full h-full flex flex-col justify-between pointer-events-none p-4 md:p-6">
 
-        <!-- Top Bar Header: Status & Audio Controls -->
+        <!-- Header Status Bar -->
         <header class="flex justify-between items-center w-full max-w-5xl mx-auto pointer-events-auto bg-slate-900/80 p-3 md:p-4 rounded-2xl border border-cyan-500/30 shadow-xl backdrop-blur-md">
             <div class="flex items-center space-x-3">
                 <div class="bg-gradient-to-r from-blue-600 to-cyan-500 p-2.5 rounded-xl shadow-md flex items-center">
@@ -68,7 +67,7 @@
                 </div>
             </div>
 
-            <!-- Fish Target Counter & Progress -->
+            <!-- Fish Target Counter -->
             <div id="fishCounterBox" class="hidden md:flex items-center space-x-3 bg-slate-800/80 px-4 py-1.5 rounded-xl border border-cyan-500/30">
                 <span class="text-xs text-cyan-200 font-semibold uppercase tracking-wider">Ikan Dimakan:</span>
                 <div class="flex items-center space-x-1">
@@ -95,12 +94,10 @@
             </div>
         </header>
 
-        <!-- Dynamic Main Screen Area (Center Modal/UI) -->
+        <!-- Main Dynamic Screen Container -->
         <main id="mainContainer" class="flex-1 flex items-center justify-center pointer-events-auto my-4 overflow-y-auto">
-            <!-- Dynamic Content Injected Here via JavaScript -->
         </main>
 
-        <!-- Bottom Status Bar for Mobile -->
         <footer class="md:hidden flex justify-center items-center pointer-events-auto">
             <div class="bg-slate-900/90 border border-cyan-500/30 px-4 py-2 rounded-xl flex items-center space-x-3">
                 <span class="text-xs text-cyan-200 font-bold">Umpan Ikan:</span>
@@ -109,11 +106,8 @@
         </footer>
     </div>
 
-    <!-- Web Audio & Game Script Logic -->
+    <!-- Script Logic -->
     <script>
-        /* ==========================================================================
-           1. GAME STATE & QUESTION BANK DATA
-           ========================================================================== */
         const gameState = {
             stars: 0,
             currentMission: 1,
@@ -127,7 +121,7 @@
             playerFish: { x: 0, y: 0, size: 28, targetX: 0, targetY: 0, speed: 0.1 }
         };
 
-        // Question Bank
+        // Bank Soalan Terkini
         const questionBank = {
             1: [
                 {
@@ -169,6 +163,7 @@
                     type: "reorder",
                     instruction: "Tulis dan susun perkataan di bawah supaya menjadi satu ayat yang betul.",
                     words: ["buah-buahan", "Saffa", "membasuh", "sebelum", "makan", "segar"],
+                    // DI SINI TELAH DIKEMAS KINI SECARA TEPAT DENGAN PERMINTAAN ANDA:
                     correctAnswer: "Saffa membasuh buah-buahan segar sebelum makan.",
                     audioText: "Tulis dan susun perkataan di bawah supaya menjadi satu ayat yang betul."
                 }
@@ -218,19 +213,12 @@
 
         const missionProgress = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
-        /* ==========================================================================
-           2. WEB AUDIO SYNTHESIZER
-           ========================================================================== */
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function playSound(type) {
@@ -280,12 +268,8 @@
             }
         }
 
-        /* ==========================================================================
-           3. WEB SPEECH API
-           ========================================================================== */
         function speakText(text) {
             if (gameState.audioMuted || !gameState.speechSynth) return;
-
             gameState.speechSynth.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'ms-MY';
@@ -300,9 +284,7 @@
         }
 
         function stopSpeech() {
-            if (gameState.speechSynth) {
-                gameState.speechSynth.cancel();
-            }
+            if (gameState.speechSynth) gameState.speechSynth.cancel();
         }
 
         function toggleMute() {
@@ -316,9 +298,6 @@
             }
         }
 
-        /* ==========================================================================
-           4. CANVAS ENGINE
-           ========================================================================== */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -565,10 +544,6 @@
             requestAnimationFrame(animate);
         }
 
-        /* ==========================================================================
-           5. UI SCREENS
-           ========================================================================== */
-        
         function showStartScreen() {
             gameState.isPlaying = false;
             const container = document.getElementById('mainContainer');
@@ -664,10 +639,6 @@
             document.getElementById('playerTitle').innerText = `TAHAP ${gameState.currentMission}: MISI EJAAN`;
         }
 
-        /* ==========================================================================
-           6. QUESTION MODAL GENERATOR
-           ========================================================================== */
-        
         function triggerQuestionModal() {
             gameState.isPlaying = false;
             const currentM = gameState.currentMission;
@@ -761,10 +732,6 @@
             `;
         }
 
-        /* ==========================================================================
-           7. ANSWER CHECKING LOGIC
-           ========================================================================== */
-        
         function checkMCQAnswer(selected) {
             const q = gameState.currentQuestion;
             if (selected === q.correctAnswer) {
@@ -946,9 +913,6 @@
             }, 2500);
         }
 
-        /* ==========================================================================
-           8. INIT ON LOAD
-           ========================================================================== */
         window.onload = function() {
             resizeCanvas();
             showStartScreen();
